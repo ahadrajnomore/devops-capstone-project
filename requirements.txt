@@ -1,0 +1,6 @@
+Flask
+nose
+coverage
+flake8
+pylint
+gunicorn

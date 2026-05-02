@@ -21,19 +21,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python - <<'PY'
-          import pathlib
-          import nose
-          path = pathlib.Path(nose.__file__).parent / "suite.py"
-          text = path.read_text()
-          text = text.replace("collections.Callable", "collections.abc.Callable")
-          if "import collections.abc" not in text:
-              text = text.replace("import collections", "import collections\nimport collections.abc")
-          path.write_text(text)
-          PY
 
-      - name: Run tests
-        run: nosetests
+      - name: Run nosetests
+        run: |
+          python - <<'PY'
+          import collections
+          import collections.abc
+          collections.Callable = collections.abc.Callable
+          import nose
+          nose.run_exit()
+          PY
 
       - name: Run flake8
         run: flake8 service tests || true
